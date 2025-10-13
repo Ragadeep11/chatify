@@ -3,6 +3,7 @@ import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
+import cloudinary from "../lib/cloudinary.js"; // ✅ removed duplicate import
 
 // Generate JWT
 const generateToken = (userId, res) => {
@@ -83,4 +84,29 @@ export const login = async (req, res) => {
 export const logout = (_, res) => {
   res.cookie("jwt", "", { maxAge: 0 });
   res.status(200).json({ message: "Logged out successfully" });
+};
+
+// UPDATE PROFILE
+export const updateprofile = async (req, res) => {
+  try {
+    const { profilepic } = req.body;
+    if (!profilepic) {
+      return res.status(400).json({ message: "Profile pic is required" });
+    }
+
+    const userid = req.user._id;
+    const uploadresponse = await cloudinary.uploader.upload(profilepic);
+
+    // ✅ fixed: changed "user" to "User" (your imported model)
+    const updateduser = await User.findByIdAndUpdate(
+      userid,
+      { profilepic: uploadresponse.secure_url },
+      { new: true }
+    );
+
+    res.status(200).json(updateduser);
+  } catch (error) {
+    console.log("Error in updating profile:", error); // ✅ added error detail
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
