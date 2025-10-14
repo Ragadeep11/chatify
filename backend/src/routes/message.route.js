@@ -1,10 +1,18 @@
-import express from "express"
-const router=express.Router();
-router.get("/send",(req,res)=>{
-    res.send("send message endpoint");
-})
+import express from "express";
+import { getAllContacts, getMessagesByUserId, sendMessage,getChatPartners } from "../controllers/message.controller.js";
+import { protectRoute } from "../middleware/auth.middleware.js";
+import { arcjetProtection } from "../middleware/arcjet.middleware.js";
+const router = express.Router();
+router.use(arcjetProtection,protectRoute);
 
-router.get("/receive",(req,res)=>{
-    res.send("send message endpoint");
-})
-export  default router;
+// Get all contacts (except logged-in user)
+router.get("/contacts", getAllContacts);
+router.get("/chats",getChatPartners);
+
+// Get chat messages with a specific user
+router.get("/:id", getMessagesByUserId);
+
+// Send a message (with optional image)
+router.post("/send/:id", sendMessage);
+
+export default router;
