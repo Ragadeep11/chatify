@@ -10,7 +10,7 @@ import cookieParser from "cookie-parser";
 const app=express()
 const __dirname=path.resolve()
 dotenv.config()
-const PORT=process.env.PORT
+const PORT=process.env.PORT || 5000
 app.use(express.json())//req.body
 app.use(cookieParser())
 
