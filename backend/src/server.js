@@ -1,11 +1,11 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import path from 'path';
-import cookieParser from 'cookie-parser';
-import authRoutes from './routes/auth.route.js';
-import messageRoutes from './routes/message.route.js';
-import { connectDB } from './lib/db.js';
-import { ENV } from './lib/env.js';
+import express from "express";
+import dotenv from "dotenv";
+import path from "path";
+import cookieParser from "cookie-parser";
+import authRoutes from "./routes/auth.route.js";
+import messageRoutes from "./routes/message.route.js";
+import { connectDB } from "./lib/db.js";
+import { ENV } from "./lib/env.js";
 
 dotenv.config();
 
@@ -22,23 +22,20 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
 // Deployment setup
-// if (ENV.NODE_ENV === "production") {
-//   app.use(express.static(path.join(__dirname, "../frontend/dist")));
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.join(frontendPath, "index.html"));
-//   });
-// }
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/")));
+  const frontendPath = path.join(__dirname, "../frontend/dist");
+  app.use(express.static(frontendPath));
 
-  app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/index.html"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(frontendPath, "index.html"));
   });
 }
 
 // Start server
-connectDB().then(() => {
-  app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
-}).catch(err => {
-  console.error("❌ Failed to connect to MongoDB:", err);
-});
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+  })
+  .catch((err) => {
+    console.error("❌ Failed to connect to MongoDB:", err);
+  });
