@@ -5,12 +5,18 @@ import { MessageCircleIcon, LockIcon, MailIcon, UserIcon, LoaderIcon } from "luc
 import { Link } from "react-router";
 
 function SignUpPage() {
-  const [formData, setFormData] = useState({ fullName: "", email: "", password: "" });
+  // ⭐ FIXED → fullname (NOT fullName)
+  const [formData, setFormData] = useState({
+    fullname: "",
+    email: "",
+    password: "",
+  });
+
   const { signup, isSigningUp } = useAuthStore();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    signup(formData);
+    signup(formData); // sends { fullname, email, password }
   };
 
   return (
@@ -18,7 +24,7 @@ function SignUpPage() {
       <div className="relative w-full max-w-6xl md:h-[800px] h-[650px]">
         <BorderAnimatedContainer>
           <div className="w-full flex flex-col md:flex-row">
-            {/* FORM CLOUMN - LEFT SIDE */}
+            {/* FORM COLUMN - LEFT SIDE */}
             <div className="md:w-1/2 p-8 flex items-center justify-center md:border-r border-slate-600/30">
               <div className="w-full max-w-md">
                 {/* HEADING TEXT */}
@@ -30,6 +36,7 @@ function SignUpPage() {
 
                 {/* FORM */}
                 <form onSubmit={handleSubmit} className="space-y-6">
+
                   {/* FULL NAME */}
                   <div>
                     <label className="auth-input-label">Full Name</label>
@@ -38,8 +45,10 @@ function SignUpPage() {
 
                       <input
                         type="text"
-                        value={formData.fullName}
-                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                        value={formData.fullname}   {/* ⭐ FIXED */}
+                        onChange={(e) =>
+                          setFormData({ ...formData, fullname: e.target.value })  // ⭐ FIXED
+                        }
                         className="input"
                         placeholder="John Doe"
                       />
@@ -55,7 +64,9 @@ function SignUpPage() {
                       <input
                         type="email"
                         value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({ ...formData, email: e.target.value })
+                        }
                         className="input"
                         placeholder="johndoe@gmail.com"
                       />
@@ -71,7 +82,9 @@ function SignUpPage() {
                       <input
                         type="password"
                         value={formData.password}
-                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({ ...formData, password: e.target.value })
+                        }
                         className="input"
                         placeholder="Enter your password"
                       />
@@ -115,10 +128,12 @@ function SignUpPage() {
                 </div>
               </div>
             </div>
+
           </div>
         </BorderAnimatedContainer>
       </div>
     </div>
   );
 }
+
 export default SignUpPage;
