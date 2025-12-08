@@ -15,6 +15,7 @@ const __dirname = path.resolve();
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // ⭐ FIXED — required to parse form data
 app.use(cookieParser());
 
 // Routes
