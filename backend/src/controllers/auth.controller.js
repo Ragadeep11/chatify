@@ -70,3 +70,8 @@ export const login = async (req, res) => {
       _id: existingUser._id,
       fullname: existingUser.fullname,
       email: exi
+    })
+  } catch (error) {
+    console.log(error);
+  }
+}
